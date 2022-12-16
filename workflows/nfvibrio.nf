@@ -4,15 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-
-def valid_params = [
-
-    variant_callers   : ['ivar', 'bcftools'],
-    consensus_callers : ['ivar', 'bcftools'],
-    assemblers        : ['spades', 'skesa', 'megahit', 'velvet'],
-
-]
-
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
@@ -77,9 +68,13 @@ workflow NFVIBRIO {
 
     ch_versions = Channel.empty()
 
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
+    
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    
     INPUT_CHECK (
         ch_input
     )
@@ -100,10 +95,13 @@ workflow NFVIBRIO {
     }
     .set { ch_fastq }
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-
-    //
-    // MODULE: Concatenate FastQ files from same sample if required
-    //
+    
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULE: Concatenate FastQ files from same sample if required
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    
     CAT_FASTQ (
         ch_fastq.multiple
     )
@@ -112,10 +110,12 @@ workflow NFVIBRIO {
     .set { ch_cat_fastq }
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
 
-
-    //
-    // SUBWORKFLOW: Read QC and trim adapters
-    //
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        SUBWORKFLOW: Read QC and trim adapters
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    
     FASTQC_FASTP (
         ch_cat_fastq,
         params.save_trimmed_fail,
@@ -150,7 +150,12 @@ workflow NFVIBRIO {
     }
     */
 
-    //ch_shovill_quast_multiqc = Channel.empty()
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULE: Assembling reads
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    
     ch_assembly_fastq  = FASTQC_FASTP.out.reads
 
     SHOVILL (
@@ -161,6 +166,20 @@ workflow NFVIBRIO {
     ch_versions             = ch_versions.mix(SHOVILL.out.versions)
 
 
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULE: Assembly QC 
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    ch_quast_ref = genome.fasta
+    ch_quast_gff = genome.gff
+    QUAST(
+        ch_shovill_contigs,
+        ch_ref,
+        ch_gff,
+        false,
+        false
+    )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
        ch_versions.unique().collectFile(name: 'collated_versions.yml')
