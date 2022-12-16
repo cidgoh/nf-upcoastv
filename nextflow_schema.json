@@ -304,6 +304,10 @@
         "save_trimmed_fail": {
             "type": "string",
             "default": "false"
+        },
+        "assembler": {
+            "type": "string",
+            "default": null
         }
     }
 }
