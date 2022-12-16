@@ -173,8 +173,8 @@ workflow NFVIBRIO {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     ch_quast_ref = params.fasta
-    println(params.fasta)
-    //ch_quast_gff = genome.gff
+    println(params.gtf)
+    ch_quast_gff = params.gff
     /*QUAST(
         ch_shovill_contigs,
         ch_ref,
