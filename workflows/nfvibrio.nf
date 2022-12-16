@@ -52,6 +52,7 @@ include { FASTQC_FASTP } from '../subworkflows/nf-core/fastqc_fastp'
 //
 include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'
 include { SHOVILL                   } from '../modules/nf-core/shovill/main'
+include { QUAST                   } from '../modules/nf-core/cat/fastq/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
