@@ -171,8 +171,9 @@ workflow NFVIBRIO {
         MODULE: Assembly QC 
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    ch_quast_ref = genome.fasta
-    ch_quast_gff = genome.gff
+    ch_quast_ref = params.fasta
+    println(params.fasta)
+    //ch_quast_gff = genome.gff
     QUAST(
         ch_shovill_contigs,
         ch_ref,
