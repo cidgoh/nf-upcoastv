@@ -124,44 +124,7 @@ workflow NFVIBRIO {
     ch_variants_fastq = FASTQC_FASTP.out.reads
     ch_versions = ch_versions.mix(FASTQC_FASTP.out.versions)
 
-    //
-    // Filter empty FastQ files after adapter trimming
-    //
     /*
-    ch_fail_reads_multiqc = Channel.empty()
-    if (!params.skip_fastp) {
-        ch_variants_fastq
-            .join(FASTQC_FASTP.out.trim_json)
-            .map {
-                meta, reads, json ->
-                    pass = WorkflowIllumina.getFastpReadsAfterFiltering(json) > 0
-                    [ meta, reads, json, pass ]
-            }
-            .set { ch_pass_fail_reads }
-
-        ch_pass_fail_reads
-            .map { meta, reads, json, pass -> if (pass) [ meta, reads ] }
-            .set { ch_variants_fastq }
-
-        ch_pass_fail_reads
-            .map {
-                meta, reads, json, pass ->
-                if (!pass) {
-                    fail_mapped_reads[meta.id] = 0
-                    num_reads = WorkflowIllumina.getFastpReadsBeforeFiltering(json)
-                    return [ "$meta.id\t$num_reads" ]
-                }
-            }
-            .set { ch_pass_fail_reads }
-
-        MULTIQC_TSV_FAIL_READS (
-            ch_pass_fail_reads.collect(),
-            ['Sample', 'Reads before trimming'],
-            'fail_mapped_reads'
-        )
-        .set { ch_fail_reads_multiqc }
-    }
-
     //
     // MODULE: Run Kraken2 for removal of host reads
     //
@@ -191,10 +154,11 @@ workflow NFVIBRIO {
     ch_assembly_fastq  = FASTQC_FASTP.out.reads
 
     SHOVILL (
-        ch_assembly_fastq.map { meta, fastq -> [ meta, fastq ] }
+        ch_assembly_fastq.map { meta, fastq -> [ meta, fastq ] }, 
+        '--assembler skesa'
 
     )
-    //ch_spades_quast_multiqc = SHOVILL.out.quast_tsv
+    ch_shovill_contigs      = SHOVILL.out.contigs
     ch_versions             = ch_versions.mix(SHOVILL.out.versions)
 
 
