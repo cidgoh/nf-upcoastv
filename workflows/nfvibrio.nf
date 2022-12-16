@@ -67,7 +67,7 @@ def multiqc_report = []
 workflow NFVIBRIO {
 
     ch_versions = Channel.empty()
-    gff              = params.gff                   ? params.gff                  ? Channel.fromPath(params.gff).collect()
+    
 
     
     /*
