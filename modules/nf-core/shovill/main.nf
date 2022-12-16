@@ -4,7 +4,7 @@ process SHOVILL {
 
     conda "bioconda::shovill=1.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/shovill:1.1.0--0' :
+        'https://depot.galaxyproject.org/singularity/shovill%3A1.1.0--hdfd78af_1' :
         'quay.io/biocontainers/shovill:1.1.0--0' }"
 
     input:
