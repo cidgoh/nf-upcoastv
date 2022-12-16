@@ -154,8 +154,7 @@ workflow NFVIBRIO {
     ch_assembly_fastq  = FASTQC_FASTP.out.reads
 
     SHOVILL (
-        ch_assembly_fastq.map { meta, fastq -> [ meta, fastq ] }, 
-        '--assembler skesa'
+        ch_assembly_fastq.map { meta, fastq -> [ meta, fastq ] }
 
     )
     ch_shovill_contigs      = SHOVILL.out.contigs
