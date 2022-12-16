@@ -177,8 +177,8 @@ workflow NFVIBRIO {
     ch_quast_gff = params.gff
     QUAST(
         ch_shovill_contigs,
-        ch_ref,
-        ch_gff,
+        ch_quast_ref,
+        ch_quast_gff,
         false,
         false
     )
