@@ -174,13 +174,13 @@ workflow NFVIBRIO {
     ch_quast_ref = params.fasta
     println(params.fasta)
     //ch_quast_gff = genome.gff
-    QUAST(
+    /*QUAST(
         ch_shovill_contigs,
         ch_ref,
         ch_gff,
         false,
         false
-    )
+    )*/
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
        ch_versions.unique().collectFile(name: 'collated_versions.yml')
