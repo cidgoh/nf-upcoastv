@@ -4,6 +4,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+
+def valid_params = [
+
+    variant_callers   : ['ivar', 'bcftools'],
+    consensus_callers : ['ivar', 'bcftools'],
+    assemblers        : ['spades', 'skesa', 'megahit', 'velvet'],
+
+]
+
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
@@ -14,6 +23,7 @@ WorkflowNfvibrio.initialise(params, log)
 def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
+def assemblers = params.assemblers ? params.assemblers.split(',').collect{ it.trim().toLowerCase() } : []
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
@@ -38,6 +48,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { FASTQC_FASTP } from '../subworkflows/nf-core/fastqc_fastp'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,7 +59,8 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      } from '../modules/nf-core/fastqc/main'
+include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'
+include { SHOVILL                   } from '../modules/nf-core/shovill/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -71,19 +83,125 @@ workflow NFVIBRIO {
     INPUT_CHECK (
         ch_input
     )
+    .reads
+    .map {
+        meta, fastq ->
+            def meta_clone = meta.clone()
+            meta_clone.id = meta_clone.id.split('_')[0..-2].join('_')
+            [ meta_clone, fastq ]
+    }
+    .groupTuple(by: [0])
+    .branch {
+        meta, fastq ->
+            single  : fastq.size() == 1
+                return [ meta, fastq.flatten() ]
+            multiple: fastq.size() > 1
+                return [ meta, fastq.flatten() ]
+    }
+    .set { ch_fastq }
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //
-    // MODULE: Run FastQC
+    // MODULE: Concatenate FastQ files from same sample if required
     //
-    FASTQC (
-        INPUT_CHECK.out.reads
+    CAT_FASTQ (
+        ch_fastq.multiple
     )
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    .reads
+    .mix(ch_fastq.single)
+    .set { ch_cat_fastq }
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first().ifEmpty(null))
+
+
+    //
+    // SUBWORKFLOW: Read QC and trim adapters
+    //
+    FASTQC_FASTP (
+        ch_cat_fastq,
+        params.save_trimmed_fail,
+        false
+      )
+    ch_variants_fastq = FASTQC_FASTP.out.reads
+    ch_versions = ch_versions.mix(FASTQC_FASTP.out.versions)
+
+    //
+    // Filter empty FastQ files after adapter trimming
+    //
+    /*
+    ch_fail_reads_multiqc = Channel.empty()
+    if (!params.skip_fastp) {
+        ch_variants_fastq
+            .join(FASTQC_FASTP.out.trim_json)
+            .map {
+                meta, reads, json ->
+                    pass = WorkflowIllumina.getFastpReadsAfterFiltering(json) > 0
+                    [ meta, reads, json, pass ]
+            }
+            .set { ch_pass_fail_reads }
+
+        ch_pass_fail_reads
+            .map { meta, reads, json, pass -> if (pass) [ meta, reads ] }
+            .set { ch_variants_fastq }
+
+        ch_pass_fail_reads
+            .map {
+                meta, reads, json, pass ->
+                if (!pass) {
+                    fail_mapped_reads[meta.id] = 0
+                    num_reads = WorkflowIllumina.getFastpReadsBeforeFiltering(json)
+                    return [ "$meta.id\t$num_reads" ]
+                }
+            }
+            .set { ch_pass_fail_reads }
+
+        MULTIQC_TSV_FAIL_READS (
+            ch_pass_fail_reads.collect(),
+            ['Sample', 'Reads before trimming'],
+            'fail_mapped_reads'
+        )
+        .set { ch_fail_reads_multiqc }
+    }
+
+    //
+    // MODULE: Run Kraken2 for removal of host reads
+    //
+    ch_assembly_fastq  = ch_variants_fastq
+    ch_kraken2_multiqc = Channel.empty()
+    if (!params.skip_kraken2) {
+        KRAKEN2_KRAKEN2 (
+            ch_variants_fastq,
+            PREPARE_GENOME.out.kraken2_db,
+            params.kraken2_variants_host_filter || params.kraken2_assembly_host_filter,
+            params.kraken2_variants_host_filter || params.kraken2_assembly_host_filter
+        )
+        ch_kraken2_multiqc = KRAKEN2_KRAKEN2.out.report
+        ch_versions        = ch_versions.mix(KRAKEN2_KRAKEN2.out.versions.first().ifEmpty(null))
+
+        if (params.kraken2_variants_host_filter) {
+            ch_variants_fastq = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq
+        }
+
+        if (params.kraken2_assembly_host_filter) {
+            ch_assembly_fastq = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq
+        }
+    }
+    */
+
+    //ch_shovill_quast_multiqc = Channel.empty()
+    ch_assembly_fastq  = FASTQC_FASTP.out.reads
+
+    SHOVILL (
+        ch_assembly_fastq.map { meta, fastq -> [ meta, fastq ] }
+
+    )
+    //ch_spades_quast_multiqc = SHOVILL.out.quast_tsv
+    ch_versions             = ch_versions.mix(SHOVILL.out.versions)
+
+
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique{ it.text }.collectFile(name: 'collated_versions.yml')
-    )
+       ch_versions.unique().collectFile(name: 'collated_versions.yml')
+   )
 
     //
     // MODULE: MultiQC
@@ -98,7 +216,7 @@ workflow NFVIBRIO {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+    //ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect(),

@@ -8,7 +8,6 @@ process SAMPLESHEET_CHECK {
 
     input:
     path samplesheet
-    val  platform
 
     output:
     path '*.csv'       , emit: csv
@@ -17,13 +16,11 @@ process SAMPLESHEET_CHECK {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in nf-core/viralrecon/bin/
+    script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
     """
     check_samplesheet.py \\
         $samplesheet \\
-        samplesheet.valid.csv \\
-        --platform $platform
-
+        samplesheet.valid.csv
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
