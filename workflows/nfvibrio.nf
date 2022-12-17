@@ -164,6 +164,7 @@ workflow NFVIBRIO {
         ch_assembly_fastq.map { meta, fastq -> [ meta, fastq ] }
 
     )
+    
     ch_shovill_contigs      = SHOVILL.out.contigs
     ch_versions             = ch_versions.mix(SHOVILL.out.versions)
 
@@ -174,10 +175,10 @@ workflow NFVIBRIO {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     ch_quast_ref = params.fasta
-    println(params.gff)
     ch_quast_gff = params.gff
     QUAST(
-        ch_shovill_contigs,
+        
+        ch_shovill_contigs.collect{it[1]}
         ch_quast_ref,
         ch_quast_gff,
         false,
