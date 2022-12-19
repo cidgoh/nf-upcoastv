@@ -166,8 +166,8 @@ workflow NFVIBRIO {
 
     )
     
-    ch_prokka_contigs      = SHOVILL.out.contigs
-    ch_shovill_contigs     = SHOVILL.out.contigs
+    
+    ch_quast_contigs       = SHOVILL.out.contigs
     ch_versions            = ch_versions.mix(SHOVILL.out.versions)
 
 
@@ -193,7 +193,7 @@ workflow NFVIBRIO {
         MODULE: Annotation
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    
+    ch_prokka_contigs      = SHOVILL.out.contigs
     PROKKA(
         ch_prokka_contigs,
         [],
@@ -201,10 +201,33 @@ workflow NFVIBRIO {
     )
     ch_versions             = ch_versions.mix(PROKKA.out.versions)
 
+    
+
+     /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULE: Antibiotic resistance
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    
+    AMRFINDERPLUS_UPDATE(
+        
+    )
+    ch_amr_db               = AMRFINDERPLUS_UPDATE.out.db
+    ch_versions             = ch_versions.mix(AMRFINDERPLUS_UPDATE.out.versions)
+
+    ch_amrfinder_contigs     = SHOVILL.out.contigs
+    AMRFINDERPLUS_RUN(
+        ch_amrfinder_contigs,
+        ch_amr_db
+    )
+    
+    ch_versions             = ch_versions.mix(AMRFINDERPLUS_RUN.out.versions)
+    ch_versions             = ch_versions.mix(AMRFINDERPLUS_RUN.out.tool_version)
+    ch_versions             = ch_versions.mix(AMRFINDERPLUS_RUN.out.db_version)
+
     CUSTOM_DUMPSOFTWAREVERSIONS (
        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-   )
-
+    )
     //
     // MODULE: MultiQC
     //
