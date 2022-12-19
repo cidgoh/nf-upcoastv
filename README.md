@@ -30,11 +30,12 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 2. Performing Read QC ([`FASTP`](https://github.com/OpenGene/fastp))
-3. Present QC for raw reads ([`SHOVILL`](https://github.com/tseemann/shovill))
-   1. Correct sequencing errors in reads ([`SHOVILL`](https://github.com/tseemann/shovill))
-   2. Pre-overlap ("stitch") paired-end reads ([`SHOVILL`](https://github.com/tseemann/shovill))
-   3. Assemble with SPAdes/SKESA/Megahit with modified kmer range and PE + long SE reads ([`SHOVILL`](https://github.com/tseemann/shovill))
-   4. Correct minor assembly errors by mapping reads back to contigs ([`SHOVILL`](https://github.com/tseemann/shovill))
+3. Assemble quality controlled reads ([`SHOVILL`](https://github.com/tseemann/shovill))
+   1. Estimating genome size by counting unqiue kmer-mers ([`KMC`](https://github.com/refresh-bio/KMC))
+   2. Correct sequencing errors in reads ([`TRIMMOMATIC`](https://github.com/usadellab/Trimmomatic))
+   3. Pre-overlap ("stitch") paired-end reads ([`FLASH`](https://ccb.jhu.edu/software/FLASH/))
+   4. Assemble with ([`SPAdes`](https://github.com/tseemann/shovill))/([`SKESA`](https://github.com/tseemann/shovill))/([`Megahit`](https://github.com/tseemann/shovill)) with modified kmer range and PE + long SE reads
+   5. Correct minor assembly errors by mapping reads back to contigs ([`PILON`](https://github.com/tseemann/shovill))
 4. Present QC for raw reads ([`QUAST`](http://multiqc.info/))
 5. Present QC for raw reads ([`PROKKA`](http://multiqc.info/))
 6. Present QC for raw reads ([`AMRFINDERPLUS`](http://multiqc.info/))
