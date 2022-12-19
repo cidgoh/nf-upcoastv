@@ -239,7 +239,7 @@ workflow NFVIBRIO {
     MLST(
         ch_mlst_contigs
     )
-    ch_versions             = ch_versions.mix(mlst.out.versions)
+    ch_versions             = ch_versions.mix(MLST.out.versions)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
