@@ -29,17 +29,17 @@ On release, automated continuous integration tests run the pipeline on a full-si
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Performing Read QC ([`FASTP`](https://github.com/OpenGene/fastp))
+2. Performing read QC ([`FASTP`](https://github.com/OpenGene/fastp))
 3. Assemble quality controlled reads ([`SHOVILL`](https://github.com/tseemann/shovill))
    1. Estimating genome size by counting unqiue kmer-mers ([`KMC`](https://github.com/refresh-bio/KMC))
-   2. Correct sequencing errors in reads ([`TRIMMOMATIC`](https://github.com/usadellab/Trimmomatic))
-   3. Pre-overlap ("stitch") paired-end reads ([`FLASH`](https://ccb.jhu.edu/software/FLASH/))
-   4. Assemble with ([`SPAdes`](https://github.com/tseemann/shovill))/([`SKESA`](https://github.com/tseemann/shovill))/([`Megahit`](https://github.com/tseemann/shovill)) with modified kmer range and PE + long SE reads
-   5. Correct minor assembly errors by mapping reads back to contigs ([`PILON`](https://github.com/tseemann/shovill))
-4. Present QC for raw reads ([`QUAST`](http://multiqc.info/))
-5. Present QC for raw reads ([`PROKKA`](http://multiqc.info/))
-6. Present QC for raw reads ([`AMRFINDERPLUS`](http://multiqc.info/))
-7. Present QC for raw reads ([`MLST`](http://multiqc.info/))
+   2. Correct sequencing errors in reads ([`Lighter`](https://github.com/mourisl/Lighter))
+   3. Merge paired-end reads ([`FLASH`](https://ccb.jhu.edu/software/FLASH/))
+   4. Assemble with ([`SPAdes`](https://github.com/ablab/spades))/([`SKESA`](https://github.com/ncbi/SKESA))/([`Megahit`](https://github.com/voutcn/megahit)) with modified kmer range
+   5. Correct minor assembly errors by mapping reads back to contigs ([`PILON`](https://github.com/broadinstitute/pilon))
+4. Perform assembly QC ([`QUAST`](https://github.com/ablab/quast))
+5. Annotate assembled contigs ([`PROKKA`](https://github.com/tseemann/prokka))
+6. Find antimicrobial resistance genes and point mutations in assembled contigs ([`AMRFINDERPLUS`](https://github.com/ncbi/amr))
+7. Scan contig files against traditional PubMLST typing schemes ([`MLST`](https://github.com/tseemann/mlst))
 8. Present QC for raw reads ([`MULTIQC`](http://multiqc.info/))
 
 
