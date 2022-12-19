@@ -240,7 +240,7 @@ workflow NFVIBRIO {
     MLST(
         ch_mlst_contigs
     )
-    ch_mlst_concat          = mlst.out.tsv
+    ch_mlst_concat          = MLST.out.tsv
     ch_versions             = ch_versions.mix(MLST.out.versions)
    
     CSVTK_CONCAT(
