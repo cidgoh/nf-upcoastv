@@ -31,10 +31,10 @@ On release, automated continuous integration tests run the pipeline on a full-si
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 2. Performing Read QC ([`FASTP`](http://multiqc.info/))
 3. Present QC for raw reads ([`SHOVILL`](http://multiqc.info/))
-   3.1. Conservatively correct sequencing errors in reads
-   3.2. Pre-overlap ("stitch") paired-end reads
-   3.3. Assemble with SPAdes/SKESA/Megahit with modified kmer range and PE + long SE reads
-   3.4. Correct minor assembly errors by mapping reads back to contigs
+   1. Conservatively correct sequencing errors in reads
+   2. Pre-overlap ("stitch") paired-end reads
+   3. Assemble with SPAdes/SKESA/Megahit with modified kmer range and PE + long SE reads
+   4. Correct minor assembly errors by mapping reads back to contigs
 4. Present QC for raw reads ([`QUAST`](http://multiqc.info/))
 5. Present QC for raw reads ([`PROKKA`](http://multiqc.info/))
 6. Present QC for raw reads ([`AMRFINDERPLUS`](http://multiqc.info/))
