@@ -56,6 +56,7 @@ include { QUAST                       } from '../modules/nf-core/quast/main'
 include { PROKKA                      } from '../modules/nf-core/prokka/main'
 include { AMRFINDERPLUS_UPDATE        } from '../modules/nf-core/amrfinderplus/update/main'
 include { AMRFINDERPLUS_RUN           } from '../modules/nf-core/amrfinderplus/run/main'
+include { MLST                        } from '../modules/nf-core/mlst/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -203,9 +204,7 @@ workflow NFVIBRIO {
     )
     ch_versions             = ch_versions.mix(PROKKA.out.versions)
 
-    
-
-     /*
+    /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         MODULES: Antibiotic resistance
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -229,16 +228,36 @@ workflow NFVIBRIO {
     ch_versions             = ch_versions.mix(AMRFINDERPLUS_RUN.out.tool_version)
     ch_versions             = ch_versions.mix(AMRFINDERPLUS_RUN.out.db_version)
 
+   
+    
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULES: MLST
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    ch_mlst_contigs     = SHOVILL.out.contigs
+    MLST(
+        ch_mlst_contigs
+    )
+    ch_versions             = ch_versions.mix(mlst.out.versions)
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULE: Software and database versions
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
     CUSTOM_DUMPSOFTWAREVERSIONS (
        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-    
-    
+
+
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         MODULE: MultiQC for generating quality reports
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
+    
     
     //TODO: add more modules to the report
 
