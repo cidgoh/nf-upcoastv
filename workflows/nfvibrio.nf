@@ -56,7 +56,7 @@ include { QUAST                       } from '../modules/nf-core/quast/main'
 include { PROKKA                      } from '../modules/nf-core/prokka/main'
 include { AMRFINDERPLUS_UPDATE        } from '../modules/nf-core/amrfinderplus/update/main'
 include { AMRFINDERPLUS_RUN           } from '../modules/nf-core/amrfinderplus/run/main'
-include { MLST                        } from '../modules/nf-core/mlst/main's
+include { MLST                        } from '../modules/nf-core/mlst/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
