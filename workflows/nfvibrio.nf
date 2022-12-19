@@ -244,9 +244,9 @@ workflow NFVIBRIO {
     ch_versions             = ch_versions.mix(MLST.out.versions)
    
     CSVTK_CONCAT(
-        ch_mlst_concat.collect(),
-        "\t",
-        "\t"
+        ch_mlst_concat.collect{},
+        "tsv",
+        "tsv"
     )
     ch_versions             = ch_versions.mix(CSVTK_CONCAT.out.versions)
 
