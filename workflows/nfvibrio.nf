@@ -54,6 +54,8 @@ include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'
 include { SHOVILL                     } from '../modules/nf-core/shovill/main'
 include { QUAST                       } from '../modules/nf-core/quast/main'
 include { PROKKA                      } from '../modules/nf-core/prokka/main'
+include { AMRFINDERPLUS_UPDATE        } from '../modules/nf-core/amrfinderplus/update/main'
+include { AMRFINDERPLUS_RUN           } from '../modules/nf-core/amrfinderplus/run/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -216,6 +218,8 @@ workflow NFVIBRIO {
     ch_versions             = ch_versions.mix(AMRFINDERPLUS_UPDATE.out.versions)
 
     ch_amrfinder_contigs     = SHOVILL.out.contigs
+    
+    
     AMRFINDERPLUS_RUN(
         ch_amrfinder_contigs,
         ch_amr_db
