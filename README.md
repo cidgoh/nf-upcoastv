@@ -64,7 +64,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 
 ## Documentation
-Currently this README serves as documentation for this workflow. More detailed documentation under development. If you have specific questions, open a issue or conect at mzanwar@sfu.ca 
+Currently this README serves as the only documentation for this workflow. More detailed documentation is under development. If you have specific questions, open a issue or connect at [mzanwar@sfu.ca](mailto:mzanwar@sfu.ca). 
 <!-- The nf-core/nfvibrio pipeline comes with documentation about the pipeline [usage](https://nf-co.re/nfvibrio/usage), [parameters](https://nf-co.re/nfvibrio/parameters) and [output](https://nf-co.re/nfvibrio/output).-->
 
 ## Credits
