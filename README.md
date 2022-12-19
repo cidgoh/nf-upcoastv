@@ -29,12 +29,12 @@ On release, automated continuous integration tests run the pipeline on a full-si
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Performing Read QC ([`FASTP`](http://multiqc.info/))
-3. Present QC for raw reads ([`SHOVILL`](http://multiqc.info/))
-   1. Conservatively correct sequencing errors in reads
-   2. Pre-overlap ("stitch") paired-end reads
-   3. Assemble with SPAdes/SKESA/Megahit with modified kmer range and PE + long SE reads
-   4. Correct minor assembly errors by mapping reads back to contigs
+2. Performing Read QC ([`FASTP`](https://github.com/OpenGene/fastp))
+3. Present QC for raw reads ([`SHOVILL`](https://github.com/tseemann/shovill))
+   1. Correct sequencing errors in reads ([`SHOVILL`](https://github.com/tseemann/shovill))
+   2. Pre-overlap ("stitch") paired-end reads ([`SHOVILL`](https://github.com/tseemann/shovill))
+   3. Assemble with SPAdes/SKESA/Megahit with modified kmer range and PE + long SE reads ([`SHOVILL`](https://github.com/tseemann/shovill))
+   4. Correct minor assembly errors by mapping reads back to contigs ([`SHOVILL`](https://github.com/tseemann/shovill))
 4. Present QC for raw reads ([`QUAST`](http://multiqc.info/))
 5. Present QC for raw reads ([`PROKKA`](http://multiqc.info/))
 6. Present QC for raw reads ([`AMRFINDERPLUS`](http://multiqc.info/))
