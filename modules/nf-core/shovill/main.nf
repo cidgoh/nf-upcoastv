@@ -26,7 +26,7 @@ process SHOVILL {
     def prefix = task.ext.prefix ?: "${meta}"
     def memory = task.memory.toGiga()
     """
-    mkdir $meta.id
+    mkdir -p $meta.id
     shovill \\
         --R1 ${reads[0]} \\
         --R2 ${reads[1]} \\
