@@ -57,6 +57,7 @@ include { PROKKA                      } from '../modules/nf-core/prokka/main'
 include { AMRFINDERPLUS_UPDATE        } from '../modules/nf-core/amrfinderplus/update/main'
 include { AMRFINDERPLUS_RUN           } from '../modules/nf-core/amrfinderplus/run/main'
 include { MLST                        } from '../modules/nf-core/mlst/main'
+include { CSVTK_CONCAT                } from '../modules/nf-core/csvtk/concat/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -239,7 +240,15 @@ workflow NFVIBRIO {
     MLST(
         ch_mlst_contigs
     )
+    ch_mlst_concat          = mlst.out.tsv
     ch_versions             = ch_versions.mix(MLST.out.versions)
+   
+    CSVTK_CONCAT(
+        ch_mlst_concat.collect(),
+        "tsv",
+        "tsv"
+    )
+    ch_versions             = ch_versions.mix(CSVTK_CONCAT.out.versions)
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
