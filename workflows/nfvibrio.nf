@@ -207,7 +207,7 @@ workflow NFVIBRIO {
 
      /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        MODULE: Antibiotic resistance
+        MODULES: Antibiotic resistance
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     
@@ -232,9 +232,16 @@ workflow NFVIBRIO {
     CUSTOM_DUMPSOFTWAREVERSIONS (
        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-    //
-    // MODULE: MultiQC
-    //
+    
+    
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULE: MultiQC for generating quality reports
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    
+    //TODO: add more modules to the report
+
     workflow_summary    = WorkflowNfvibrio.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
@@ -245,7 +252,6 @@ workflow NFVIBRIO {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    //ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect(),
