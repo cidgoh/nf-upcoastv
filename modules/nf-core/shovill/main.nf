@@ -11,7 +11,7 @@ process SHOVILL {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("$meta.id/*.contigs.fa")                       , emit: contigs
+    tuple val(meta), path("$meta.id/${meta.id}.contigs.fa")              , emit: contigs
     tuple val(meta), path("$meta.id/shovill.corrections")                , emit: corrections
     tuple val(meta), path("$meta.id/shovill.log")                        , emit: log
     tuple val(meta), path("$meta.id/{skesa,spades,megahit,velvet}.fasta"), emit: raw_contigs
@@ -26,7 +26,7 @@ process SHOVILL {
     def prefix = task.ext.prefix ?: "${meta}"
     def memory = task.memory.toGiga()
     """
-    mkdir -p $meta.id
+    mkdir $meta.id
     shovill \\
         --R1 ${reads[0]} \\
         --R2 ${reads[1]} \\
@@ -36,10 +36,7 @@ process SHOVILL {
         --outdir ./$meta.id \\
         --force
 
-    for $file in ${meta.id}/*; do
-    mv ${file} ${meta.id}.${file}
-    done
-    
+    mv $meta.id/contigs.fa $meta.id/${meta.id}.contigs.fa
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
