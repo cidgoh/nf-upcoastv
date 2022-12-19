@@ -33,9 +33,9 @@ process SHOVILL {
         $args \\
         --cpus $task.cpus \\
         --ram $memory \\
-        --outdir ./"${meta.id}" \\
+        --outdir ./$meta.id \\
         --force
-    mv "${meta.id}/contigs.fa" "${meta.id}/${meta.id}.contigs.fa"
+    mv $meta.ids/contigs.fa $meta.id/${meta.id}.contigs.fa
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         shovill: \$(echo \$(shovill --version 2>&1) | sed 's/^.*shovill //')
