@@ -52,7 +52,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
    ```bash
-   nextflow run nf-core/nfvibrio -profile test,YOURPROFILE --outdir <OUTDIR>
+   nextflow run nfvibrio/main.nf -profile <conda,singularity,YOURPROFILE>  --genome "VP01" --input sample_sheet.csv --outdir <OUTDIR> --assembler <skesa,megahit,spades>
    ```
 
    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
@@ -62,21 +62,15 @@ On release, automated continuous integration tests run the pipeline on a full-si
    > - If you are using `singularity`, please use the [`nf-core download`](https://nf-co.re/tools/#downloading-pipelines-for-offline-use) command to download images first, before running the pipeline. Setting the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) Nextflow options enables you to store and re-use the images from a central location for future pipeline runs.
    > - If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
 
-4. Start running your own analysis!
-
-   <!-- TODO nf-core: Update the example "typical command" below used to run the pipeline -->
-
-   ```bash
-   nextflow run nf-core/nfvibrio --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
-   ```
 
 ## Documentation
-
-The nf-core/nfvibrio pipeline comes with documentation about the pipeline [usage](https://nf-co.re/nfvibrio/usage), [parameters](https://nf-co.re/nfvibrio/parameters) and [output](https://nf-co.re/nfvibrio/output).
+Currently this README serves as documentation for this workflow. More detailed documentation under development. If you have specific questions, open a issue or conect at mzanwar@sfu.ca 
+<!-- The nf-core/nfvibrio pipeline comes with documentation about the pipeline [usage](https://nf-co.re/nfvibrio/usage), [parameters](https://nf-co.re/nfvibrio/parameters) and [output](https://nf-co.re/nfvibrio/output).-->
 
 ## Credits
 
-nf-core/nfvibrio was originally written by Muhammad Zohaib Anwar.
+nf-core/nfvibrio was originally written by Muhammad Zohaib Anwar under the supervision of William Hsiao at the [Centre for Infectious Disease Genomics and One Health](http://www.cidgoh.ca/) at [Simon Fraser University](http://www.sfu.ca/). 
+
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
@@ -86,7 +80,7 @@ We thank the following people for their extensive assistance in the development 
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#nfvibrio` channel](https://nfcore.slack.com/channels/nfvibrio) (you can join with [this invite](https://nf-co.re/join/slack)).
+<!-- For further information or help, don't hesitate to get in touch on the [Slack `#nfvibrio` channel](https://nfcore.slack.com/channels/nfvibrio) (you can join with [this invite](https://nf-co.re/join/slack)).-->
 
 ## Citations
 
