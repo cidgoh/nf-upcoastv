@@ -36,7 +36,10 @@ process SHOVILL {
         --outdir ./$meta.id \\
         --force
 
-    mv $meta.id/contigs.fa $meta.id/${meta.id}.contigs.fa
+    for file in ${meta.id}/*; do
+    mv ${file} ${meta.id}.${file}
+    done
+    
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
