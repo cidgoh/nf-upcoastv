@@ -165,8 +165,9 @@ workflow NFVIBRIO {
 
     )
     
-    ch_shovill_contigs      = SHOVILL.out.contigs
-    ch_versions             = ch_versions.mix(SHOVILL.out.versions)
+    ch_prokka_contigs      = SHOVILL.out.contigs
+    ch_shovill_contigs     = SHOVILL.out.contigs
+    ch_versions            = ch_versions.mix(SHOVILL.out.versions)
 
 
     /*
@@ -184,6 +185,18 @@ workflow NFVIBRIO {
         false,
         false
     )
+    ch_versions             = ch_versions.mix(QUAST.out.versions)
+
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        MODULE: Annotation
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+    
+    PROKKA(
+        ch_prokka_contigs
+    )
+    ch_versions             = ch_versions.mix(PROKKA.out.versions)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
        ch_versions.unique().collectFile(name: 'collated_versions.yml')
