@@ -36,8 +36,12 @@ process SHOVILL {
         --outdir ./$meta.id \\
         --force
 
-    for file in ./${meta.id}/*; do mv ${file} ${meta.id}.${file}; done;
-    
+    mv $meta.id/contigs.fa $meta.id/${meta.id}.contigs.fa
+    mv $meta.id/shovill.corrections $meta.id/${meta.id}.shovill.corrections
+    mv $meta.id/shovill.log $meta.id/${meta.id}.shovill.log
+    mv $meta.id/{skesa,spades,megahit,velvet}.fasta $meta.id/${meta.id}.{skesa,spades,megahit,velvet}.fasta
+    mv $meta.id/contigs.{fastg,gfa,LastGraph} $meta.id/${meta.id}.contigs.{fastg,gfa,LastGraph}
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         shovill: \$(echo \$(shovill --version 2>&1) | sed 's/^.*shovill //')
