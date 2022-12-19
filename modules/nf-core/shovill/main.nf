@@ -26,15 +26,16 @@ process SHOVILL {
     def prefix = task.ext.prefix ?: "${meta}"
     def memory = task.memory.toGiga()
     """
+    mkdir "${meta}"
     shovill \\
         --R1 ${reads[0]} \\
         --R2 ${reads[1]} \\
         $args \\
         --cpus $task.cpus \\
         --ram $memory \\
-        --outdir ./ \\
+        --outdir ./"${meta}" \\
         --force
-    mv contigs.fa "${meta}.contigs.fa"
+    mv "${meta}/contigs.fa" "${meta}/${meta}.contigs.fa"
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         shovill: \$(echo \$(shovill --version 2>&1) | sed 's/^.*shovill //')
