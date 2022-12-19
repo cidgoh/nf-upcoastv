@@ -180,7 +180,7 @@ workflow NFVIBRIO {
     ch_quast_gff = params.gff
     QUAST(
         
-        ch_shovill_contigs.collect{it[1]},
+        ch_quast_contigs.collect{it[1]},
         ch_quast_ref,
         ch_quast_gff,
         false,
