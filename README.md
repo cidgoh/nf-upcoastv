@@ -15,24 +15,36 @@ nfvibrio)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1
 
 <!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
 
-**nf-core/nfvibrio** is a bioinformatics best-practice analysis pipeline for Vibrio Parahaemolyticus analysis.
+**nf-core/nfvibrio** is a bioinformatics best-practice analysis pipeline for Vibrio __parahaemolyticus__ analysis. This workflow is under active development and updates. If you are using it always remember to sync your fork. 
 
-The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
+The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. <!-- Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community! -->
 
-<!-- TODO nf-core: Add full-sized test dataset and amend the paragraph below if applicable -->
+<!-- TODO nf-core: Add full-sized test dataset and amend the paragraph below if applicable 
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/nfvibrio/results).
+-->
 
 ## Pipeline summary
 
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+2. Performing Read QC ([`FASTP`](http://multiqc.info/))
+3. Present QC for raw reads ([`SHOVILL`](http://multiqc.info/))
+   a. Conservatively correct sequencing errors in reads
+   b. Pre-overlap ("stitch") paired-end reads
+   c. Assemble with SPAdes/SKESA/Megahit with modified kmer range and PE + long SE reads
+   d. Correct minor assembly errors by mapping reads back to contigs
+4. Present QC for raw reads ([`QUAST`](http://multiqc.info/))
+5. Present QC for raw reads ([`PROKKA`](http://multiqc.info/))
+6. Present QC for raw reads ([`AMRFINDERPLUS`](http://multiqc.info/))
+7. Present QC for raw reads ([`MLST`](http://multiqc.info/))
+8. Present QC for raw reads ([`MULTIQC`](http://multiqc.info/))
+
 
 ## Quick Start
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.1`)
+1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.0.0`)
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
 
