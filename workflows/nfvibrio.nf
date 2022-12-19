@@ -195,7 +195,9 @@ workflow NFVIBRIO {
     */
     
     PROKKA(
-        ch_prokka_contigs
+        ch_prokka_contigs,
+        null,
+        null
     )
     ch_versions             = ch_versions.mix(PROKKA.out.versions)
 
