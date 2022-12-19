@@ -72,7 +72,7 @@ Currently this README serves as the only documentation for this workflow. More d
 nf-core/nfvibrio was originally written by Muhammad Zohaib Anwar under the supervision of William Hsiao at the [Centre for Infectious Disease Genomics and One Health](http://www.cidgoh.ca/) at [Simon Fraser University](http://www.sfu.ca/). 
 
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+<!--We thank the following people for their extensive assistance in the development of this pipeline:-->
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
