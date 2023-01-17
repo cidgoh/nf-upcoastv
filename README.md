@@ -8,7 +8,7 @@
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/nfvibrio)
 
-<!-- [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23nfvibrio-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/  
+<!-- [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23nfvibrio-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/
 nfvibrio)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core) -->
 
 ## Introduction
@@ -19,7 +19,7 @@ nfvibrio)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. <!-- Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community! -->
 
-<!-- TODO nf-core: Add full-sized test dataset and amend the paragraph below if applicable 
+<!-- TODO nf-core: Add full-sized test dataset and amend the paragraph below if applicable
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/nfvibrio/results).
 -->
@@ -42,7 +42,6 @@ On release, automated continuous integration tests run the pipeline on a full-si
 7. Scan contig files against traditional PubMLST typing schemes ([`MLST`](https://github.com/tseemann/mlst))
 8. Present QC for raw reads ([`MULTIQC`](http://multiqc.info/))
 
-
 ## Quick Start
 
 1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.0.0`)
@@ -62,15 +61,15 @@ On release, automated continuous integration tests run the pipeline on a full-si
    > - If you are using `singularity`, please use the [`nf-core download`](https://nf-co.re/tools/#downloading-pipelines-for-offline-use) command to download images first, before running the pipeline. Setting the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) Nextflow options enables you to store and re-use the images from a central location for future pipeline runs.
    > - If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
 
-
 ## Documentation
-Currently this README serves as the only documentation for this workflow. More detailed documentation is under development. If you have specific questions, open a issue or connect at [mzanwar@sfu.ca](mailto:mzanwar@sfu.ca). 
+
+Currently this README serves as the only documentation for this workflow. More detailed documentation is under development. If you have specific questions, open a issue or connect at [mzanwar@sfu.ca](mailto:mzanwar@sfu.ca).
+
 <!-- The nf-core/nfvibrio pipeline comes with documentation about the pipeline [usage](https://nf-co.re/nfvibrio/usage), [parameters](https://nf-co.re/nfvibrio/parameters) and [output](https://nf-co.re/nfvibrio/output).-->
 
 ## Credits
 
-nf-core/nfvibrio was originally written by Muhammad Zohaib Anwar under the supervision of William Hsiao at the [Centre for Infectious Disease Genomics and One Health](http://www.cidgoh.ca/) at [Simon Fraser University](http://www.sfu.ca/). 
-
+nf-core/nfvibrio was originally written by Muhammad Zohaib Anwar under the supervision of William Hsiao at the [Centre for Infectious Disease Genomics and One Health](http://www.cidgoh.ca/) at [Simon Fraser University](http://www.sfu.ca/).
 
 <!--We thank the following people for their extensive assistance in the development of this pipeline:-->
 
